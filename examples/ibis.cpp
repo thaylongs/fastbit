@@ -2150,7 +2150,19 @@ static void parse_args(int argc, char** argv, int& mode,
             case 'd':
             case 'D': // data directory, multiple directory allowed
                 if (i+1 < argc && argv[i+1][0] != '-') {
-                    dirs.push_back(argv[i+1]);
+                    bool df = (argv[i][2] == 'f' || argv[i][2] == 'F'); // data directory file
+                    if(df){
+                        std::ifstream file(argv[i+1]);
+                        std::string line;
+                        while (std::getline(file, line)){
+                            char * aux  =  new char[line.length()];
+                            strcpy(aux, line.c_str());
+                            dirs.push_back(aux);
+                        } 
+                        file.close();
+                    } else{
+                        dirs.push_back(argv[i+1]);
+                    }    
                     i = i + 1;
                 }
                 else {
